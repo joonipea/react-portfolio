@@ -1,0 +1,13 @@
+.music-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+.cover-art{
+    margin-bottom: 15px;
+}
+.section-header{
+    margin-bottom: 15px;
+}

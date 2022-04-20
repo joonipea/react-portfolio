@@ -1,0 +1,36 @@
+@media screen and (max-width: 720px) {
+    video{
+        display:none;
+    }
+}
+video{
+    object-fit: cover;
+    width: 25%;
+    height: 25%;
+    position:absolute;
+    top: calc(100vh - 25%);
+    z-index: -2;
+}
+.hero-container{
+    position:absolute;
+    top:0;
+    min-height: 100vh;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.2);
+    object-fit: contain;
+    z-index: -1;
+    background-color: #ffdea0;
+
+}
+
+.hero-container > h1 {
+    color: #fff;
+    font-size: 5em;
+    margin-top: 100px;
+    max-width: 95vw;
+    overflow-wrap: break-word;
+}

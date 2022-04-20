@@ -1,24 +1,36 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Navigation from './components/Navbar';
+import { Route, Routes } from 'react-router-dom';
+import Home from './components/pages/Home';
+import Design from './components/pages/Design';
+import Merch from './components/pages/Merch';
+import Music from './components/pages/Music';
+import Shows from './components/pages/Shows';
+import Names from './components/pages/Names';
+import About from './components/pages/About';
+import Beatstore from './components/pages/Beatstore';
+import Journal from './components/pages/Journal';
+import { BrowserRouter as Router} from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Router>
+      <Navigation />
+      <Routes>
+        <Route exact path ='/' element={<Home/>} />
+        <Route path='/Music' element={<Music/>} />
+        <Route path='/Shows' element={<Shows/>} />
+        <Route path='/Design' element={<Design/>} />
+        <Route path='/Merch' element={<Merch/>} />
+        <Route path='/Names' element={<Names/>} />
+        <Route path='/Beats' element={<Beatstore/>} />
+        <Route path='/About' element={<About />} />
+        <Route path='/Journal' element={<Journal />} />
+      </Routes>
+      </Router>
+    </>
   );
 }
 

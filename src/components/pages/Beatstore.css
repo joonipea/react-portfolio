@@ -1,0 +1,105 @@
+@font-face {
+    font-family: 'unifont';
+    src: url('../../../public/fonts/icomoon.ttf');
+}
+.media-controls button{
+    font-family: 'unifont';
+}
+.media-controls button{
+    width:32px;
+}
+.player{
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    width: 100%;
+    position:fixed;
+    bottom: 0;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.player input{
+    width: 60%;
+    margin:auto;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+.player input::-webkit-slider-runnable-track {
+    background: #053a5f;
+    height: 2px;
+  }
+  
+  /******** Firefox ********/
+  .player input::-moz-range-track {
+    background: #053a5f;
+    height: 2px;
+  }
+  .player input::-webkit-slider-thumb {
+      margin-top: -6px;
+      -webkit-appearance: none;
+      appearance: none;
+      border: black 1px solid;
+      outline: black 1px solid;
+      height: 14px;
+      width: 14px;
+      border-radius: 14px;
+      background: white;
+  }
+  .player input::-moz-range-thumb {
+    margin-top: -6px;
+    -webkit-appearance: none;
+    appearance: none;
+    border: black 1px solid;
+    outline: black 1px solid;
+    height: 14px;
+    width: 14px;
+    border-radius: 14px;
+    background: white;
+}
+.player .song-time{
+    margin-right: 20px;
+    width: 40px;
+}
+.beatstore-container{
+    min-height: 100vh;
+    padding-bottom: 72px;
+}
+.file{
+    margin-bottom: 5px;
+}
+.file > span{
+    margin-left: 5px;
+    cursor:pointer;
+}
+@media screen and (min-width:500px){
+    .mobilewarn{
+        display:none;
+    }
+
+}
+
+@supports (-webkit-overflow-scrolling: touch) {
+   button{
+    color: -internal-light-dark(black, white);
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    box-sizing: border-box;
+    background-color: -internal-light-dark(rgb(239, 239, 239), rgb(59, 59, 59));
+    margin: 0em;
+    padding: 1px 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+    border-image: initial;
+   }
+  }

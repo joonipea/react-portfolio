@@ -1,0 +1,14 @@
+.name-container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+.section-header{
+    margin-bottom: 15px;
+}
+.name-container > a{
+    max-width: 100%;
+    text-align: center;
+}
