@@ -20,7 +20,7 @@ const ml = [
     "October",
     "November",
     "December"
-]
+];
 console.log(saying);
 const sayingIndex = Math.round(Math.random(saying.length));
 console.log(sayingIndex);
@@ -28,84 +28,199 @@ const funSaying = saying[sayingIndex];
 const current = new Date();
 const month = current.getMonth();
 const year = current.getFullYear();
-const activeMonth = ml[month];
-const activeYear = year;
-var day = current.getDate();
-const numDays = new Date(year, month+1, 0).getDate();
+const day = current.getDate();
+var activeMonth = month;
+var activeYear = year;
+var activeDay = day;
+var monthName = ml[activeMonth];
+var numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+var pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+const journalPage = store.get(pageTitle);
+const journalEntry = createRef();
 
 
 class DaySection extends React.Component{
     state = {
-        activeIndex: day-1
+        activeIndex: activeDay-1
+    }
+    componentDidMount(){
+        journalEntry.current.value = journalPage !== undefined ? journalPage.entry : '';
     }
     render(){
-        var {activeIndex} = this.state
-        var pageTitle = `${day}+${activeMonth}+${activeYear}`;
-        const journalEntry = createRef();
         function handleSave(){
             var je = journalEntry.current.value
-            store.set(pageTitle, {day,year,month,entry:je});
+            store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
             alert('saved');
         }
-        var datePoints = [];
-        for (let index = 0; index < numDays; index++) {
-            const activeCheck = this.state.activeIndex === index ? 'Active-Date-Button' : 'Date-Button';
-            datePoints.push(<div onClick={() => handleClick(index)} key={index} data-date={index} className={activeCheck}></div>) 
+        function handleDelete(){
+            store.remove(pageTitle);
+            alert('saved');
         }
-        const journalPage = store.get(pageTitle);
-        journalEntry.current = journalPage != undefined ? journalPage.entry : 'nothing';
-        const handleClick = (ni) => {
-            /*
-                function setIndex(key){
-                    return new Promise((resolve)=>{
-                        pageTitle = `${key}+${activeMonth}+${activeYear}`;
-                        console.log(pageTitle);
-                        resolve();
-                    })
-                }
-                async function changePage(key){
-                await setIndex(key);
-                journalPage = store.get(pageTitle);
-                console.log(journalPage)
-                journalEntry.current.value = journalPage != undefined ? journalPage.entry : '';
-                }
-                changePage(ni);
-                this.setState({activeIndex: ni});
-            */
+        var oldEntries = [];
+        function colorOld(){
+            return new Promise((resolve)=>{
+
+                store.each(function(value, key) {
+                    if(value.activeMonth === activeMonth){
+                        console.log(key)
+                        oldEntries.push(key.match(/([1-9][0-9]|[1-9])/g)[0])
+                        console.log(oldEntries);
+                    }
+                })
+                resolve();
+
+            })
+        }
+        var datePoints = [];
+        async function setDatePoints(activeIndex){
+            colorOld();
+            for (let index = 0; index < numDays; index++) {
+                const activeCheck = activeIndex === index ? 'Active-Date-Button' : 'Date-Button';
+                const oldCheck = oldEntries.includes(`${index+1}`) ? 'Old-Date-Button Date-Button' : activeCheck;
+                datePoints.push(<div onClick={() => handleClick(index)} key={index} data-date={index} className={oldCheck}></div>) 
+            }
+        }
+        setDatePoints(this.state.activeIndex);
+        
+
+        const handleClick = async (ni) => {
            function setDay(){
                return new Promise((resolve)=>{
-                day = ni + 1
-                console.log(day)
-                pageTitle = `${day}+${activeMonth}+${activeYear}`;
+                activeDay = ni + 1
+                pageTitle = `${activeDay}+${monthName}+${activeYear}`;
                 resolve();
                })
-           }
-           async function turnPage(){
-               await setDay();
-               console.log(pageTitle);
-               const newPage = store.get(pageTitle);
-               console.log(newPage);
-               journalEntry.current.value = newPage != undefined ? newPage.entry : '';
-           }
-           turnPage();
-
-           this.setState({activeIndex: day - 1})
-           
-                
+            }
+            await setDay();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            this.setState({activeIndex: activeDay - 1})     
         };
+        const nextMonth = async () =>{
+            if (activeMonth === 11){
+                return
+            }else{
+            function setMonth(){
+                return new Promise((resolve)=>{
+                    activeMonth = activeMonth + 1
+                    resolve();
+                })
+            }
+            function setDay(){
+                return new Promise((resolve)=>{
+                    activeDay = 1
+                    pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+                    resolve();
+                })
+             }
+            await setDay();
+            await setMonth();
+            datePoints = [];
+            numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            this.setState({ activeIndex: activeDay - 1 });
+            setDatePoints(this.state.activeIndex);  
+            }
+        }
+        const previousMonth = async () =>{
+            if (activeMonth === 0){
+                return
+            }else{
+            function setMonth(){
+                return new Promise((resolve)=>{
+                    activeMonth = activeMonth - 1
+                    resolve();
+                })
+            }
+            function setDay(){
+                return new Promise((resolve)=>{
+                    activeDay = 1
+                    pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+                    resolve();
+                })
+             }
+            await setDay();
+            await setMonth();
+            datePoints = [];
+            numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            this.setState({activeIndex: activeDay - 1})  
+            setDatePoints(this.state.activeIndex);
+            }
+        }
+        const nextYear = async () =>{
+            function setMonth(){
+                return new Promise((resolve)=>{
+                    activeYear = activeYear + 1
+                    resolve();
+                })
+            }
+            function setDay(){
+                return new Promise((resolve)=>{
+                    activeDay = 1
+                    pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+                    resolve();
+                })
+             }
+            await setDay();
+            await setMonth();
+            datePoints = [];
+            numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            this.setState({ activeIndex: activeDay - 1 });
+            setDatePoints(this.state.activeIndex);  
+        }
+        const previousYear = async () =>{
+            function setMonth(){
+                return new Promise((resolve)=>{
+                    activeYear = activeYear - 1
+                    resolve();
+                })
+            }
+            function setDay(){
+                return new Promise((resolve)=>{
+                    activeDay = 1
+                    pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+                    resolve();
+                })
+            }
+            await setDay();
+            await setMonth();
+            datePoints = [];
+            numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            this.setState({activeIndex: activeDay - 1})  
+            setDatePoints(this.state.activeIndex);
+        }
         return(
             <>
                 <div className='Text-Container'>
                 <button onClick={handleSave}>save</button>
-                <h1>Journal</h1>
-                    <textarea val='' ref={journalEntry} className='Journal-Text' placeholder={funSaying}></textarea>
+                <button onClick={handleDelete}>delete entry</button>
+                <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
+                    <textarea ref={journalEntry} className='Journal-Text' placeholder={funSaying}></textarea>
                 </div>
                 <div className='Date-Container'>
-                    <h2>{activeMonth} {day}, {activeYear}</h2>
+                    <div className="date-control">
+                        <button onClick={()=>previousMonth()}>&#60;</button>
+                        <h2 style={{width:`80%`,textAlign:`center`}}>{ml[activeMonth]} {activeDay}</h2>
+                        <button onClick={()=>nextMonth()}>&#62;</button>
+                    </div>
+                    <div className="date-point-container">
                     {datePoints}
+                    </div>
+                    <div className="date-control">
+                        <button onClick={()=>previousYear()}>&#60;</button>
+                        <h2 style={{width:`80%`,textAlign:`center`}}>{activeYear}</h2>
+                        <button onClick={()=>nextYear()}>&#62;</button>
+                    </div>
                 </div>
             </>
-        )
+        );
     }
 }
 
