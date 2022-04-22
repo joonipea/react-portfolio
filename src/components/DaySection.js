@@ -35,8 +35,9 @@ var activeDay = day;
 var monthName = ml[activeMonth];
 var numDays = new Date(activeYear, activeMonth+1, 0).getDate();
 var pageTitle = `${activeDay}+${monthName}+${activeYear}`;
-const journalPage = store.get(pageTitle);
+var journalPage = store.get(pageTitle);
 const journalEntry = createRef();
+var freshText = 0;
 
 
 class DaySection extends React.Component{
@@ -44,27 +45,58 @@ class DaySection extends React.Component{
         activeIndex: activeDay-1
     }
     componentDidMount(){
-        journalEntry.current.value = journalPage !== undefined ? journalPage.entry : '';
+        journalEntry.current.innerHTML = journalPage !== undefined ? journalPage.entry : '';
     }
     render(){
         function handleSave(){
-            var je = journalEntry.current.value
-            store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
-            alert('saved');
+            return new Promise((resolve)=>{
+                if(freshText === 1){
+                    var je = journalEntry.current.innerHTML
+                    store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
+                    alert('saved');
+                    freshText = 0
+                    resolve();
+                }
+                else{
+                    resolve();
+                }
+
+            })
         }
         function handleDelete(){
-            store.remove(pageTitle);
-            alert('saved');
+            return new Promise((resolve)=>{
+                if(window.confirm("delete entry?")) {
+                    store.remove(pageTitle);
+                    alert('deleted');
+                    journalEntry.current.innerHTML = '';
+                    resolve();
+                }
+                else{
+                    resolve();
+                }
+            })
         }
-        var oldEntries = [];
+        function checkJournalUpdate(){
+            if (journalEntry.current.innerHTML === journalPage.entry){
+                freshText = 0
+            }else if (journalEntry.current.innerHTML === undefined) {
+                freshText = 0
+            }else {
+                freshText = 1
+            }
+        }
+        function about(){
+            journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
+        }
+        var entries = [];
         function colorOld(){
             return new Promise((resolve)=>{
 
                 store.each(function(value, key) {
                     if(value.activeMonth === activeMonth){
                         console.log(key)
-                        oldEntries.push(key.match(/([1-9][0-9]|[1-9])/g)[0])
-                        console.log(oldEntries);
+                        entries.push(key);
+                        console.log(entries);
                     }
                 })
                 resolve();
@@ -75,9 +107,25 @@ class DaySection extends React.Component{
         async function setDatePoints(activeIndex){
             colorOld();
             for (let index = 0; index < numDays; index++) {
+                const currentEntry = `${index+1}+${monthName}+${activeYear}`
                 const activeCheck = activeIndex === index ? 'Active-Date-Button' : 'Date-Button';
-                const oldCheck = oldEntries.includes(`${index+1}`) ? 'Old-Date-Button Date-Button' : activeCheck;
-                datePoints.push(<div onClick={() => handleClick(index)} key={index} data-date={index} className={oldCheck}></div>) 
+                const oldCheck = entries.includes(currentEntry) ? `${activeCheck} Old-Date-Button` : activeCheck;
+                datePoints.push(
+                    <div 
+                        onClick={
+                            async () => {
+                                if  (journalEntry.current.innerHTML){
+                                    await handleSave(); 
+                                }
+                                handleClick(index);
+                            }
+                        } 
+                        key={index} 
+                        data-date={index} 
+                        className={oldCheck}>
+                            {index+1}
+                    </div>
+                        ) 
             }
         }
         setDatePoints(this.state.activeIndex);
@@ -93,7 +141,7 @@ class DaySection extends React.Component{
             }
             await setDay();
             const newPage = store.get(pageTitle);
-            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({activeIndex: activeDay - 1})     
         };
         const nextMonth = async () =>{
@@ -118,7 +166,7 @@ class DaySection extends React.Component{
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
-            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({ activeIndex: activeDay - 1 });
             setDatePoints(this.state.activeIndex);  
             }
@@ -145,7 +193,7 @@ class DaySection extends React.Component{
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
-            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
             }
@@ -169,7 +217,7 @@ class DaySection extends React.Component{
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
-            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({ activeIndex: activeDay - 1 });
             setDatePoints(this.state.activeIndex);  
         }
@@ -192,7 +240,7 @@ class DaySection extends React.Component{
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
-            journalEntry.current.value = newPage !== undefined ? newPage.entry : '';
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
         }
@@ -201,8 +249,9 @@ class DaySection extends React.Component{
                 <div className='Text-Container'>
                 <button onClick={handleSave}>save</button>
                 <button onClick={handleDelete}>delete entry</button>
+                <button onClick ={about}>about this page</button>
                 <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
-                    <textarea ref={journalEntry} className='Journal-Text' placeholder={funSaying}></textarea>
+                    <div onKeyDown={() => checkJournalUpdate()} contentEditable ref={journalEntry} className='Journal-Text' placeholder={funSaying}></div>
                 </div>
                 <div className='Date-Container'>
                     <div className="date-control">

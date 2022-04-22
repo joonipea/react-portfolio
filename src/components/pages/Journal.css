@@ -1,3 +1,4 @@
+
 .Journal-Container{
     width: 100%;
     display: flex;
@@ -5,15 +6,31 @@
     justify-content: flex-start;
     padding: 0px 50px;
 }
+
 .Text-Container{
-    width:60%;
+    width:75%;
 }
 .Date-Container{
-    width:40%;
+    width:25%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     vertical-align: middle;
+}
+@media screen and (max-width: 815px) {
+    .Journal-Container{
+        flex-direction: column;
+    }
+    .Text-Container{
+        width: 100%;
+        order: 2;
+    }
+    .Date-Container{
+        width: 100%;
+        order: 1;
+        margin-bottom: 15px;
+    }
+    
 }
 .Journal-Text{
     width: 100%;
@@ -33,6 +50,10 @@
     display: inline-block;
     margin: 20px;
     cursor: pointer;
+    transition: all ease 0.4s;
+}
+.Date-Button:hover{
+    filter: saturate(0.2);
 }
 .Old-Date-Button{
     background-color: lightsteelblue;
@@ -53,3 +74,9 @@
 .date-point-container{
     text-align: center;
 }
+[contenteditable=true]:empty:before{
+    content: attr(placeholder);
+    pointer-events: none;
+    display: block; /* For Firefox */
+    opacity: 0.7;
+  }
