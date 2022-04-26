@@ -8,20 +8,32 @@
 }
 
 .Text-Container{
-    width:75%;
+    max-width: calc(100% - 333px);
+    width: 75%;
+}
+.Text-Container button{
+    margin-right: 15px;
+}
+button{
+    background: transparent;
 }
 .Date-Container{
-    width:25%;
+    width:332px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     vertical-align: middle;
+}
+.date-control button{
+    border: none;
+    font-size: 2em;
 }
 @media screen and (max-width: 815px) {
     .Journal-Container{
         flex-direction: column;
     }
     .Text-Container{
+        max-width: 100%;
         width: 100%;
         order: 2;
     }
@@ -39,7 +51,7 @@
     border-style: none; 
     border-color: Transparent; 
     overflow: auto;
-    height: 100%;
+    height: calc(100% - 96px);
     resize: none;
 }
 .Date-Button{
@@ -53,7 +65,8 @@
     transition: all ease 0.4s;
 }
 .Date-Button:hover{
-    filter: saturate(0.2);
+    filter:invert();
+    outline: 2px bisque;
 }
 .Old-Date-Button{
     background-color: lightsteelblue;
