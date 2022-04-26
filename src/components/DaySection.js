@@ -46,6 +46,10 @@ class DaySection extends React.Component{
         activeIndex: activeDay-1,
         color: bodyStyle,
         backgroundColor: bgColor,
+        alertMessage: '',
+        deleteConfirmation: 'delete entry',
+        deleteClass: '',
+        messageOpacity: '0%',
         pathc1: 458,
         pathc2: 458,       
         pathc3: 458,
@@ -66,13 +70,18 @@ class DaySection extends React.Component{
         journalEntry.current.innerHTML = journalPage !== undefined ? journalPage.entry : '';
     }
     render(){
-        function handleSave(){
+        const handleSave = () =>{
             return new Promise((resolve)=>{
                 if(freshText === 1){
                     var je = journalEntry.current.innerHTML
                     store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
-                    alert('saved');
                     freshText = 0
+                    const that = this
+                    this.setState({alertMessage: 'saved'});
+                    this.setState({messageOpacity: '100%'})
+                    setTimeout(function(){
+                        that.setState({messageOpacity:'0%'})
+                    },1200)
                     resolve();
                 }
                 else{
@@ -81,15 +90,27 @@ class DaySection extends React.Component{
 
             })
         }
-        function handleDelete(){
+        const handleDelete = () => {
             return new Promise((resolve)=>{
-                if(window.confirm("delete entry?")) {
+                if(deleteConfirmation === 'are you sure?') {
                     store.remove(pageTitle);
-                    alert('deleted');
                     journalEntry.current.innerHTML = '';
+                    this.setState({alertMessage: 'deleted'});
+                    this.setState({messageOpacity: '100%'})
+                    const that = this
+                    setTimeout(function(){
+                        that.setState({messageOpacity:'0%'})
+                    },1200)
+                    this.setState({deleteConfirmation:'delete entry'});
+                    this.setState({deleteClass:''});
                     resolve();
                 }
                 else{
+                    const handleDeleteConfirmation = () => {
+                        this.setState({deleteConfirmation:'are you sure?'});
+                        this.setState({deleteClass:'delConf'});
+                    }
+                    handleDeleteConfirmation();
                     resolve();
                 }
             })
@@ -304,7 +325,7 @@ class DaySection extends React.Component{
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
         }
-        const {color, backgroundColor, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
+        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
         return(
             <>
                 <style>{color}
@@ -313,7 +334,7 @@ class DaySection extends React.Component{
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
                     <div onKeyDown={() => checkJournalUpdate()} contentEditable ref={journalEntry} className='Journal-Text' placeholder={funSaying}></div>
                     <button onClick={handleSave}>save</button>
-                    <button onClick={handleDelete}>delete entry</button>
+                    <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
                     <button onClick ={about}>about this page</button>
                 </div>
                 <div className='Date-Container'>
@@ -332,8 +353,12 @@ class DaySection extends React.Component{
                     </div>
                 </div>
                 <svg style={{position:`fixed`,bottom:`0`,zIndex:`-1`,left:`0`}}id="visual" viewBox="0 0 960 540" version="1.1">
-                    <path d={`M0 ${pathc1}L40 ${pathc2}C80 ${pathc3} 160 ${pathc4} 240 ${pathc5}C320 ${pathc6} 400 ${pathc7} 480 ${pathc8}C560 ${pathc9} 640 ${pathc10} 720 ${pathc11}C800 ${pathc12} 880 ${pathc13} 920 ${pathc14}L960 ${pathc15}L960 541L920 541C880 541 800 541 720 541C640 541 560 541 480 541C400 541 320 541 240 541C160 541 80 541 40 541L0 541Z`} fill={backgroundColor} strokeLinecap={`round`} strokeLinejoin={`miter`} style={{transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0s`}}></path>
+                    <path d={`M0 ${pathc1}L40 ${pathc2}C80 ${pathc3} 160 ${pathc4} 240 ${pathc5}C320 ${pathc6} 400 ${pathc7} 480 ${pathc8}C560 ${pathc9} 640 ${pathc10} 720 ${pathc11}C800 ${pathc12} 880 ${pathc13} 920 ${pathc14}L960 ${pathc15}L960 541L920 541C880 541 800 541 720 541C640 541 560 541 480 541C400 541 320 541 240 541C160 541 80 541 40 541L0 541Z`} fill={backgroundColor} strokeLinecap={`round`} strokeLinejoin={`miter`} style={{transition: `all 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0s`}}></path>
                 </svg>
+                <div style={{width:`100%`,position:`fixed`,display:`flex`,justifyContent:`center`,opacity:messageOpacity,transition:`all ease 0.4s`}}>
+                    <div className="alert">{alertMessage}</div>
+                </div>
+                
             </>
         );
     }
