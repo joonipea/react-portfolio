@@ -16,6 +16,8 @@
 }
 button{
     background: transparent;
+    color:black;
+
 }
 .Date-Container{
     width:332px;
@@ -35,12 +37,18 @@ button{
     .Text-Container{
         max-width: 100%;
         width: 100%;
-        order: 2;
+        order: 1;
     }
     .Date-Container{
         width: 100%;
-        order: 1;
+        order: 2;
         margin-bottom: 15px;
+    }
+    .btn-grp{
+        display: flex;
+        justify-content: center;
+        margin-top: 50px;
+        margin-bottom: 50px;
     }
     
 }

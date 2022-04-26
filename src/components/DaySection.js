@@ -50,6 +50,7 @@ class DaySection extends React.Component{
         deleteConfirmation: 'delete entry',
         deleteClass: '',
         messageOpacity: '0%',
+        aboutOpen: 'about this page',
         pathc1: 458,
         pathc2: 458,       
         pathc3: 458,
@@ -167,8 +168,20 @@ class DaySection extends React.Component{
               console.log(({pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15}))
               
         }
-        function about(){
-            journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
+        const about = async() =>{
+            if(aboutOpen === 'about this page'){
+                await handleSave();
+                
+                journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
+                journalEntry.current.contentEditable = false;
+                this.setState({aboutOpen:'close about'});
+            }else{
+                const newPage = store.get(pageTitle);
+                journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
+                journalEntry.current.contentEditable = true;
+                this.setState({aboutOpen:'about this page'});
+            }
+
         }
         var entries = [];
         // pushes dates with pervious entries
@@ -325,7 +338,7 @@ class DaySection extends React.Component{
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
         }
-        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
+        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, aboutOpen, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
         return(
             <>
                 <style>{color}
@@ -333,9 +346,11 @@ class DaySection extends React.Component{
                 <div className='Text-Container'>
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
                     <div onKeyDown={() => checkJournalUpdate()} contentEditable ref={journalEntry} className='Journal-Text' placeholder={funSaying}></div>
-                    <button onClick={handleSave}>save</button>
-                    <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
-                    <button onClick ={about}>about this page</button>
+                    <div className="btn-grp">
+                        <button onClick={handleSave}>save</button>
+                        <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
+                        <button onClick ={about}>{aboutOpen}</button>
+                    </div>
                 </div>
                 <div className='Date-Container'>
                     <div className="date-control">
