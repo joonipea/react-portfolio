@@ -3,19 +3,15 @@ import './Beatstore.css';
 
 function importAll(r) {
   let audio = {};
-  r.keys().map((item) => { audio[item.replace('./', '')] = r(item); });
+  r.keys().map((item) => ( audio[item.replace('./', '')] = r(item) ));
   return audio;
 }
 
 const audio = importAll(require.context('../../../public/audio', false, /\.(mp3|flac|wav)$/));
 const files = Object.values(audio)
-console.log(files);
 const pFiles = files.map((file, index) => ({id: index, file: file, name: file.match(/\/media\/([\w-]+)\./)[1].replace(/_/g, " ")}))
-console.log(pFiles)
 var currentSong = files[0]
 var currentSongIndex = 0
-var blob = new Blob([currentSong], {type : 'audio/mp3'})
-var aFile = URL.createObjectURL(blob)
 
 function Beatstore() {
 
@@ -197,12 +193,11 @@ function Beatstore() {
       <div className="beatstore-container">
         <div>
           <p>a fun lo-fi mostly functional playlist of what i'm working on updated every now again :~)</p>
-          <p className="mobilewarn">hi right now this is better viewed on a desktop or laptop check back soon for a slightly prettier interface</p>
         </div>
         <div className="pList">
           {files.map((file, index) => (
             <div onClick={() => handleChange(index)} className="file" key={index}>
-              <button>&#9658;</button><span>{pFiles[index].name}</span><br></br>
+              <button>&#9658;</button><span>{pFiles[index].name}</span>
             </div>
           ))}
         </div>
@@ -215,7 +210,6 @@ function Beatstore() {
             Your browser does not support the
             <code>audio</code> element.
           </audio>
-          <br />
           <div className="media-controls">
             <button onClick={prev}>&#xe903;</button>
             <button className={`playing-${playing}`} onClick={play}>{playPause}</button>
@@ -227,7 +221,7 @@ function Beatstore() {
             type="range"
             min="0"
             max="100"
-            step="1"
+            step="0.001"
             value={seekValue}
             onChange={(e) => {
               const seekto = audioPlayer.current.duration * (+e.target.value / 100);

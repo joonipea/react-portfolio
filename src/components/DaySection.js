@@ -21,9 +21,7 @@ const ml = [
     "November",
     "December"
 ];
-console.log(saying);
 const sayingIndex = Math.round(Math.random(saying.length));
-console.log(sayingIndex);
 const funSaying = saying[sayingIndex];
 const current = new Date();
 const month = current.getMonth();
@@ -39,18 +37,24 @@ var journalPage = store.get(pageTitle);
 const journalEntry = createRef();
 var freshText = 0;
 var bgColor = `#ffffff`;
-var bodyStyle = `body{background-color: ${bgColor};transition: background-color ease 0.1s;}`
+var bodyStyle = `body{background-color: ${bgColor};transition: background-color ease 0.1s;}`;
+var sDisplay = `.Settings-Container{display: none;}`;
+
 
 class DaySection extends React.Component{
     state = {
         activeIndex: activeDay-1,
         color: bodyStyle,
+        activeMonth,
+        monthName,
         backgroundColor: bgColor,
         alertMessage: '',
         deleteConfirmation: 'delete entry',
         deleteClass: '',
         messageOpacity: '0%',
         aboutOpen: 'about this page',
+        settingsDisplay: sDisplay,
+        sOpen: false,
         pathc1: 458,
         pathc2: 458,       
         pathc3: 458,
@@ -128,7 +132,7 @@ class DaySection extends React.Component{
             function utf8ToHex(str) {
                 return Array.from(str).map(c => 
                   c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) : 
-                  encodeURIComponent(c).replace(/\%/g,'').toLowerCase()
+                  encodeURIComponent(c).replace(/%/g,'').toLowerCase()
                 ).join('');
               }
               bgColor = `#${(utf8ToHex(journalEntry.current.innerHTML)).substring((utf8ToHex(journalEntry.current.innerHTML)).length - 6)}`
@@ -140,7 +144,6 @@ class DaySection extends React.Component{
                 return Math.floor(Math.random() * (max - min + 1) ) + min;
               }
               const randomMid = getRndInteger(425, 475)
-              console.log(randomMid)
               function getCoord(diff){
                 if(Math.floor(Math.random() * 2) === 1){
                     return randomMid + diff
@@ -165,7 +168,6 @@ class DaySection extends React.Component{
               const pathc14 = getCoord(15)
               const pathc15 = getCoord(15)
               this.setState({pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15})
-              console.log(({pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15}))
               
         }
         const about = async() =>{
@@ -183,14 +185,82 @@ class DaySection extends React.Component{
             }
 
         }
-        var entries = [];
+        const settings = async() =>{
+            if(!this.state.sOpen){
+                this.setState({settingsDisplay:`.Settings-Container{display: block; background-color:${bgColor}}`});
+                this.setState({sOpen:true});
+            }else{
+                this.setState({settingsDisplay:`.Settings-Container{display: none; background-color:${bgColor}}`});
+                this.setState({sOpen:false});
+            }
+
+        }
+        /* come back */
+        const exportEntries = () =>{
+            const entryList = [];
+            function getEntries(){
+                return new Promise((resolve)=>{
+                    store.each(function(value, key){
+                        entryList.push({key,value})
+                    })
+                    resolve();
+                })
+            }
+            console.log(store.get(pageTitle))
+            console.log(entryList)
+            async function download(filename, data) {
+                await getEntries();
+                var element = document.createElement('a');
+                element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(data)));
+                element.setAttribute('download', filename);
+              
+                element.style.display = 'none';
+                document.body.appendChild(element);
+              
+                element.click();
+              
+                document.body.removeChild(element);
+              }
+              // Start file download.
+              download("journalEntries.journ",entryList);
+        }
+
+        const importEntries = () =>{
+            var element = document.createElement('input');
+            function selectFile(){
+                return new Promise((resolve)=>{
+                    element.setAttribute('type','file');
+                    element.setAttribute('accept','.journ');
+                    element.style.display = 'none';
+
+                    document.body.appendChild(element);
+
+                    element.click();
+
+                    resolve();
+                })
+            }
+            async function handleFile(){
+                await selectFile();
+                const journ = element.files[0];
+                console.log(journ.name);
+                console.log(journ.arrayBuffer())                
+            }
+            handleFile();
+
+
+        }
+
         // pushes dates with pervious entries
-        function colorOld(){
+        var entries = [];
+        const colorOld = () => {
+            var that = this;
             return new Promise((resolve)=>{
 
                 store.each(function(value, key) {
-                    if(value.activeMonth === activeMonth){
+                    if(value.activeMonth === that.state.activeMonth){
                         entries.push(key);
+                        console.log(entries);
                     }
                 })
                 resolve();
@@ -198,10 +268,10 @@ class DaySection extends React.Component{
             })
         }
         var datePoints = [];
-        async function setDatePoints(activeIndex){
+        const setDatePoints = async (activeIndex) =>{
             colorOld();
             for (let index = 0; index < numDays; index++) {
-                const currentEntry = `${index+1}+${monthName}+${activeYear}`
+                const currentEntry = `${index+1}+${this.state.monthName}+${activeYear}`
                 const activeCheck = activeIndex === index ? 'Active-Date-Button' : 'Date-Button';
                 const oldCheck = entries.includes(currentEntry) ? `${activeCheck} Old-Date-Button` : activeCheck;
                 datePoints.push(
@@ -245,6 +315,7 @@ class DaySection extends React.Component{
             function setMonth(){
                 return new Promise((resolve)=>{
                     activeMonth = activeMonth + 1
+                    
                     resolve();
                 })
             }
@@ -257,11 +328,14 @@ class DaySection extends React.Component{
              }
             await setDay();
             await setMonth();
+            monthName = ml[activeMonth];
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
             journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({ activeIndex: activeDay - 1 });
+            this.setState({activeMonth});
+            this.setState({monthName});
             setDatePoints(this.state.activeIndex);  
             }
         }
@@ -272,6 +346,7 @@ class DaySection extends React.Component{
             function setMonth(){
                 return new Promise((resolve)=>{
                     activeMonth = activeMonth - 1
+
                     resolve();
                 })
             }
@@ -284,11 +359,14 @@ class DaySection extends React.Component{
              }
             await setDay();
             await setMonth();
+            monthName = ml[activeMonth]
             datePoints = [];
             numDays = new Date(activeYear, activeMonth+1, 0).getDate();
             const newPage = store.get(pageTitle);
             journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
-            this.setState({activeIndex: activeDay - 1})  
+            this.setState({activeIndex: activeDay - 1}) 
+            this.setState({monthName})
+            this.setState({activeMonth}) 
             setDatePoints(this.state.activeIndex);
             }
         }
@@ -338,10 +416,18 @@ class DaySection extends React.Component{
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
         }
-        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, aboutOpen, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
+        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, aboutOpen, settingsDisplay, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
         return(
             <>
-                <style>{color}
+                <div className="Settings-Container">
+                    <h2>Settings</h2>
+                    <div>Font Size <input type={`number`} defaultValue={`16px`}></input></div>
+                    <div>Color Mode <input type={`checkbox`}></input></div>
+                    <div><button onClick={exportEntries}>Export Entries</button></div>
+                    <div><button onClick={importEntries}>Import Entries</button></div>
+                    <div><button onClick={settings}>Close Settings</button></div>
+                </div>
+                <style>{color}{settingsDisplay}
                 </style>
                 <div className='Text-Container'>
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
@@ -349,7 +435,8 @@ class DaySection extends React.Component{
                     <div className="btn-grp">
                         <button onClick={handleSave}>save</button>
                         <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
-                        <button onClick ={about}>{aboutOpen}</button>
+                        <button onClick={about}>{aboutOpen}</button>
+                        <button onClick={settings}>Settings</button>
                     </div>
                 </div>
                 <div className='Date-Container'>

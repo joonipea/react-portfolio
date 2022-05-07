@@ -9,14 +9,18 @@
     width:32px;
 }
 .player{
-    display: flex;
-    flex-direction: row;
-    vertical-align: middle;
-    width: 100%;
-    position:fixed;
     bottom: 0;
+    display: flex;
     padding-left: 50px;
     padding-right: 50px;
+    position: fixed;
+    vertical-align: middle;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    background: white;
+    padding-top: 15px;
 }
 .player input{
     width: 60%;
@@ -25,6 +29,9 @@
     appearance: none;
     background: transparent;
     cursor: pointer;
+    order: 3;
+    padding-bottom: 15px;
+    padding-top: 15px;
 }
 .player input::-webkit-slider-runnable-track {
     background: #053a5f;
@@ -59,8 +66,13 @@
     background: white;
 }
 .player .song-time{
-    margin-right: 20px;
+    text-align: center;
+    margin: auto;
+    order: 2;
     width: 40px;
+}
+.player span{
+    order: 1;
 }
 .beatstore-container{
     min-height: 100vh;
@@ -73,11 +85,8 @@
     margin-left: 5px;
     cursor:pointer;
 }
-@media screen and (min-width:500px){
-    .mobilewarn{
-        display:none;
-    }
-
+.pList{
+    padding-bottom: 75px;
 }
 
 @supports (-webkit-overflow-scrolling: touch) {
