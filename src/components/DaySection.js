@@ -41,8 +41,10 @@ var bodyStyle = `body{background-color: ${bgColor};transition: background-color 
 var sDisplay = `.Settings-Container{display: none;}`;
 
 
+
 class DaySection extends React.Component{
     state = {
+        fontSize: 16,
         activeIndex: activeDay-1,
         color: bodyStyle,
         activeMonth,
@@ -195,7 +197,7 @@ class DaySection extends React.Component{
             }
 
         }
-        /* come back */
+
         const exportEntries = () =>{
             const entryList = [];
             function getEntries(){
@@ -225,7 +227,10 @@ class DaySection extends React.Component{
               download("journalEntries.journ",entryList);
         }
 
+
+        var importedEntries = [];
         const importEntries = () =>{
+            var that = this;
             var element = document.createElement('input');
             function selectFile(){
                 return new Promise((resolve)=>{
@@ -240,18 +245,45 @@ class DaySection extends React.Component{
                     resolve();
                 })
             }
+            function readFile(){
+                return new Promise( async (resolve)=>{
+                    await selectFile();
+                    var interval = setInterval(function(){
+                        if (element.files[0]){
+                            const journ = element.files[0];
+                            const reader = new FileReader();
+                            reader.addEventListener('load', (event) => {
+                              importedEntries = JSON.parse(event.target.result);
+                              resolve();
+                            });
+                            reader.readAsText(journ);
+                            clearInterval(interval);                        
+                        }
+                    }, 500);
+                });
+            }
             async function handleFile(){
-                await selectFile();
-                const journ = element.files[0];
-                console.log(journ.name);
-                console.log(journ.arrayBuffer())                
+                await readFile();
+                for (let index = 0; index < importedEntries.length; index++) {
+                    const ci = importedEntries[index];
+                    store.set(ci.key, ci.value);
+                }
+                that.setState({alertMessage: 'entries imported'});
+                that.setState({messageOpacity: '100%'})
+                setTimeout(function(){
+                    that.setState({messageOpacity:'0%'})
+                },1200)           
             }
             handleFile();
-
-
+            
+        }
+        var fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;}`
+        const handleFont = async (event) =>{
+            this.setState({fontSize: event.target.value})
+            fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;}`
         }
 
-        // pushes dates with pervious entries
+        // pushes dates with previous entries
         var entries = [];
         const colorOld = () => {
             var that = this;
@@ -416,18 +448,18 @@ class DaySection extends React.Component{
             this.setState({activeIndex: activeDay - 1})  
             setDatePoints(this.state.activeIndex);
         }
-        const {color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, aboutOpen, settingsDisplay, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
+        const {fontSize, color, backgroundColor, alertMessage, deleteConfirmation, deleteClass, messageOpacity, aboutOpen, settingsDisplay, pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15} = this.state
         return(
             <>
                 <div className="Settings-Container">
                     <h2>Settings</h2>
-                    <div>Font Size <input type={`number`} defaultValue={`16px`}></input></div>
+                    <div>Font Size <input type={`number`} value={fontSize} onChange={handleFont}></input></div>
                     <div>Color Mode <input type={`checkbox`}></input></div>
                     <div><button onClick={exportEntries}>Export Entries</button></div>
                     <div><button onClick={importEntries}>Import Entries</button></div>
                     <div><button onClick={settings}>Close Settings</button></div>
                 </div>
-                <style>{color}{settingsDisplay}
+                <style>{color}{settingsDisplay}{fontStyle}
                 </style>
                 <div className='Text-Container'>
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
@@ -436,7 +468,7 @@ class DaySection extends React.Component{
                         <button onClick={handleSave}>save</button>
                         <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
                         <button onClick={about}>{aboutOpen}</button>
-                        <button onClick={settings}>Settings</button>
+                        <button onClick={settings}>settings</button>
                     </div>
                 </div>
                 <div className='Date-Container'>
