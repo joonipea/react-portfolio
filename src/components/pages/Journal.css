@@ -66,6 +66,7 @@ button{
     background-color:bisque;
     height: 30px;
     width: 30px;
+    line-height: 30px;
     border-radius: 50%;
     display: inline-block;
     margin: 20px;
@@ -74,13 +75,15 @@ button{
 }
 .Date-Button:hover{
     filter:invert();
-    outline: 2px bisque;
+    border-color: blue;
+    border-width: 2px;
 }
 .Old-Date-Button{
     background-color: lightsteelblue;
 }
 .Active-Date-Button{
     background-color: brown;
+    line-height: 30px;
     height: 30px;
     width: 30px;
     border-radius: 50%;
@@ -120,4 +123,5 @@ button{
     top: 0;
     left: 0;
     padding: 50px;
+    z-index: 2;
 }

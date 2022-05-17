@@ -57,6 +57,7 @@ class DaySection extends React.Component{
         aboutOpen: 'about this page',
         settingsDisplay: sDisplay,
         sOpen: false,
+        allowColor: false,
         pathc1: 458,
         pathc2: 458,       
         pathc3: 458,
@@ -123,53 +124,58 @@ class DaySection extends React.Component{
             })
         }
         const checkJournalUpdate = () => {
-            if (!journalPage) {
-                freshText = 1
-            }else if (journalEntry.current.innerHTML === journalPage.entry){
-                freshText = 0
-            }else {
-                freshText = 1
+
+                if (!journalPage) {
+                    freshText = 1
+                }else if (journalEntry.current.innerHTML === journalPage.entry){
+                    freshText = 0
+                }else {
+                    freshText = 1
+                }
+                // change color depending on text in box
+                if(this.state.allowColor){
+                function utf8ToHex(str) {
+                    return Array.from(str).map(c => 
+                      c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) : 
+                      encodeURIComponent(c).replace(/%/g,'').toLowerCase()
+                    ).join('');
+                  }
+                  bgColor = `#${(utf8ToHex(journalEntry.current.innerHTML)).substring((utf8ToHex(journalEntry.current.innerHTML)).length - 6)}`
+                  bodyStyle = `body{background-color: ${bgColor};transition: background-color ease 0.4s;} .Journal-Text{color: ${bgColor}; filter:contrast(10);}`
+                  this.setState({color: bodyStyle})
+                  this.setState({backgroundColor: bgColor})
+                  //make the wave
+                  function getRndInteger(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1) ) + min;
+                  }
+                  const randomMid = getRndInteger(425, 475)
+                  function getCoord(diff){
+                    if(Math.floor(Math.random() * 2) === 1){
+                        return randomMid + diff
+                    }
+                    else{
+                        return randomMid - diff
+                    }
+                  }
+                  const pathc1 = getCoord(15)
+                  const pathc2 = getCoord(15)
+                  const pathc3 = getCoord(15)
+                  const pathc4 = getCoord(15)
+                  const pathc5 = getCoord(15)
+                  const pathc6 = getCoord(15)
+                  const pathc7 = getCoord(15)
+                  const pathc8 = getCoord(15)
+                  const pathc9 = getCoord(15)
+                  const pathc10 = getCoord(15)
+                  const pathc11 = getCoord(15)
+                  const pathc12 = getCoord(15)
+                  const pathc13 = getCoord(15)
+                  const pathc14 = getCoord(15)
+                  const pathc15 = getCoord(15)
+                  this.setState({pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15})
+
             }
-            // change color depending on text in box
-            function utf8ToHex(str) {
-                return Array.from(str).map(c => 
-                  c.charCodeAt(0) < 128 ? c.charCodeAt(0).toString(16) : 
-                  encodeURIComponent(c).replace(/%/g,'').toLowerCase()
-                ).join('');
-              }
-              bgColor = `#${(utf8ToHex(journalEntry.current.innerHTML)).substring((utf8ToHex(journalEntry.current.innerHTML)).length - 6)}`
-              bodyStyle = `body{background-color: ${bgColor}a1;transition: background-color ease 0.4s;}`
-              this.setState({color: bodyStyle})
-              this.setState({backgroundColor: bgColor})
-              //make the wave
-              function getRndInteger(min, max) {
-                return Math.floor(Math.random() * (max - min + 1) ) + min;
-              }
-              const randomMid = getRndInteger(425, 475)
-              function getCoord(diff){
-                if(Math.floor(Math.random() * 2) === 1){
-                    return randomMid + diff
-                }
-                else{
-                    return randomMid - diff
-                }
-              }
-              const pathc1 = getCoord(15)
-              const pathc2 = getCoord(15)
-              const pathc3 = getCoord(15)
-              const pathc4 = getCoord(15)
-              const pathc5 = getCoord(15)
-              const pathc6 = getCoord(15)
-              const pathc7 = getCoord(15)
-              const pathc8 = getCoord(15)
-              const pathc9 = getCoord(15)
-              const pathc10 = getCoord(15)
-              const pathc11 = getCoord(15)
-              const pathc12 = getCoord(15)
-              const pathc13 = getCoord(15)
-              const pathc14 = getCoord(15)
-              const pathc15 = getCoord(15)
-              this.setState({pathc1, pathc2, pathc3, pathc4, pathc5, pathc6, pathc7, pathc8, pathc9, pathc10, pathc11, pathc12, pathc13, pathc14, pathc15})
+            
               
         }
         const about = async() =>{
@@ -282,7 +288,13 @@ class DaySection extends React.Component{
             this.setState({fontSize: event.target.value})
             fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;}`
         }
-
+        const colorMode = (event) =>{
+            if (event.target.checked){
+                this.setState({allowColor: true});
+            }else{
+                this.setState({allowColor: false});
+            }
+        }
         // pushes dates with previous entries
         var entries = [];
         const colorOld = () => {
@@ -454,7 +466,7 @@ class DaySection extends React.Component{
                 <div className="Settings-Container">
                     <h2>Settings</h2>
                     <div>Font Size <input type={`number`} value={fontSize} onChange={handleFont}></input></div>
-                    <div>Color Mode <input type={`checkbox`}></input></div>
+                    <div>Color Mode <input onChange={colorMode} type={`checkbox`}></input></div>
                     <div><button onClick={exportEntries}>Export Entries</button></div>
                     <div><button onClick={importEntries}>Import Entries</button></div>
                     <div><button onClick={settings}>Close Settings</button></div>
