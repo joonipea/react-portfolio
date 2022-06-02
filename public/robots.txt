@@ -1,3 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Disallow: /Design/
+Disallow: /About/
+Disallow: /Merch/
+Disallow: /Shows/

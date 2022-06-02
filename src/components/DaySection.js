@@ -45,6 +45,7 @@ var sDisplay = `.Settings-Container{display: none;}`;
 class DaySection extends React.Component{
     state = {
         fontSize: 16,
+        textColor: '#000000',
         activeIndex: activeDay-1,
         color: bodyStyle,
         activeMonth,
@@ -283,10 +284,22 @@ class DaySection extends React.Component{
             handleFile();
             
         }
-        var fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;}`
+        var fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;} body{color: ${this.state.textColor}}`
         const handleFont = async (event) =>{
             this.setState({fontSize: event.target.value})
             fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;}`
+        }
+
+        const textC = async (event) =>{
+            this.setState({textColor: event.target.value})
+            fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;} body{color: ${this.state.textColor}}`
+            console.log(fontStyle)
+        }
+        const backgroundC = async (event) =>{
+            bgColor = event.target.value
+            bodyStyle = `body{background-color: ${bgColor};transition: background-color ease 0.4s;}`
+            this.setState({color: bodyStyle})
+            this.setState({backgroundColor: bgColor})
         }
         const colorMode = (event) =>{
             if (event.target.checked){
@@ -467,6 +480,8 @@ class DaySection extends React.Component{
                     <h2>Settings</h2>
                     <div>Font Size <input type={`number`} value={fontSize} onChange={handleFont}></input></div>
                     <div>Color Mode <input onChange={colorMode} type={`checkbox`}></input></div>
+                    <div>Background Color <input onChange={backgroundC} value={bgColor} type={`color`}></input></div>
+                    <div>Font Color <input onChange={textC} type={`color`}></input></div>
                     <div><button onClick={exportEntries}>Export Entries</button></div>
                     <div><button onClick={importEntries}>Import Entries</button></div>
                     <div><button onClick={settings}>Close Settings</button></div>

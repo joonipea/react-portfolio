@@ -24,6 +24,8 @@ function Beatstore() {
     const [looping, setLoop] = useState('\ue908');
     const currentMinutes = Math.trunc(currentTime/60);
     const currentSeconds = Math.round(currentTime) - (currentMinutes * 60);
+
+    
     const play = () => {
       if (audioPlayer.current.playing === 1){
         audioPlayer.current.pause();
@@ -47,6 +49,7 @@ function Beatstore() {
       }
 
     };
+
     const stop = () => {
       audioPlayer.current.pause();
       audioPlayer.current.currentTime = 0;

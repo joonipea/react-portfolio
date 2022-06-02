@@ -8,6 +8,7 @@
 .media-controls button{
     width:32px;
 }
+
 .player{
     bottom: 0;
     display: flex;
@@ -75,8 +76,12 @@
     order: 1;
 }
 .beatstore-container{
-    min-height: 100vh;
-    padding-bottom: 72px;
+    height: calc(100vh - 145px);
+    padding-bottom: 40px;
+    position: absolute;
+    top: 0;
+    background-color: beige;
+    min-width: 100%;
 }
 .file{
     margin-bottom: 5px;
@@ -86,7 +91,9 @@
     cursor:pointer;
 }
 .pList{
-    padding-bottom: 75px;
+    padding:  0px 75px 75px 75px;
+    overflow-y: scroll;
+    height: 100%;
 }
 
 @supports (-webkit-overflow-scrolling: touch) {
