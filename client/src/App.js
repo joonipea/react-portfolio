@@ -11,6 +11,7 @@ import Names from './components/pages/Names';
 import About from './components/pages/About';
 import Beatstore from './components/pages/Beatstore';
 import Journal from './components/pages/Journal';
+import Account from './Account';
 import { BrowserRouter as Router} from 'react-router-dom';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path='/Beats' element={<Beatstore/>} />
         <Route path='/About' element={<About />} />
         <Route path='/Journal' element={<Journal />} />
+        <Route path='/User' element={<Account />} />
       </Routes>
       </Router>
     </>

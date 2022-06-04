@@ -27,6 +27,10 @@ const User = new Schema({
     type: Number,
     default: 50,
   },
+  journalEntries: {
+    type: Array,
+    default: [],
+  },
   refreshToken: {
     type: [Session],
   },

@@ -1,1 +1,39 @@
 GET http://localhost:8081
+
+###
+
+POST http://localhost:8081/users/signup
+Content-Type: application/json
+
+{
+    "username": "test123@gmail.com",
+    "password": "test12234",
+    "firstName": "June",
+    "lastName": "Pratt"
+}
+
+###
+
+POST http://localhost:8081/users/login
+Content-Type: application/json
+
+{
+    "username": "test123@gmail.com",
+    "password": "test12234"
+}
+
+###
+
+POST http://localhost:8081/users/refreshToken
+
+###
+
+GET http://localhost:8081/users/me
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjlhMWI5MDA4NGVmMmZiYmIwNTY0ZWQiLCJpYXQiOjE2NTQyNzE3MjAsImV4cCI6MTY1NDI3MjYyMH0.4kI0sPVufdIMj6ebuE3nfikJj9IgYDkvjBioRoLBRp8
+
+###
+
+GET http://localhost:8081/users/logout
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjlhMWI5MDA4NGVmMmZiYmIwNTY0ZWQiLCJpYXQiOjE2NTQyNzE3MjAsImV4cCI6MTY1NDI3MjYyMH0.4kI0sPVufdIMj6ebuE3nfikJj9IgYDkvjBioRoLBRp8
