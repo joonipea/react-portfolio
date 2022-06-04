@@ -43,6 +43,9 @@ var sDisplay = `.Settings-Container{display: none;}`;
 
 
 class DaySection extends React.Component{
+    constructor(props) {
+        super(props);
+      }
     state = {
         fontSize: 16,
         textColor: '#000000',
@@ -84,13 +87,32 @@ class DaySection extends React.Component{
                 if(freshText === 1){
                     var je = journalEntry.current.innerHTML
                     store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
+                    var entry = JSON.stringify({key: pageTitle, value: {activeDay,activeYear,activeMonth,entry:je}})
+                    console.log(entry);
                     freshText = 0
                     const that = this
                     this.setState({alertMessage: 'saved'});
                     this.setState({messageOpacity: '100%'})
+                    var dis = this;
                     setTimeout(function(){
                         that.setState({messageOpacity:'0%'})
                     },1200)
+                    fetch(`${process.env.REACT_APP_API_ENDPOINT}users/saveJournalEntry`, {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${dis.props.appContext.token}`,
+                          },
+                        body: entry
+                    })
+                    .then(response => {
+                        if(!response.ok){
+                            console.log(response)
+                        } else {
+                            console.log(response)
+                        }
+                    });
                     resolve();
                 }
                 else{

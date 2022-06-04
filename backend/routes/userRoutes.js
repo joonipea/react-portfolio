@@ -153,4 +153,21 @@ router.get("/logout", verifyUser, (req, res, next) => {
     (err) => next(err)
   );
 });
+
+router.post('/saveJournalEntry', verifyUser, (req, res, next) => {
+  User.findById(req.user._id).then(
+    (user) => {
+      user.journalEntries.push(req.body);
+      user.save((err, user) => {
+        if (err) {
+          res.statusCode = 500;
+          res.send(err);
+        } else {
+          res.send(user);
+        }
+      });
+    },
+    (err) => next(err)
+  );
+});
 module.exports = router;
