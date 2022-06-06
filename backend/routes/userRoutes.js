@@ -154,6 +154,15 @@ router.get("/logout", verifyUser, (req, res, next) => {
   );
 });
 
+router.get('/delete', verifyUser, (req, res, next) => {
+  User.findByIdAndRemove(req.user._id).then(
+    (user) => {
+      res.send({ success: true });
+    },
+    (err) => next(err)
+  );
+});
+
 router.post('/saveJournalEntry', verifyUser, (req, res, next) => {
   User.findById(req.user._id).then(
     (user) => {
@@ -170,4 +179,22 @@ router.post('/saveJournalEntry', verifyUser, (req, res, next) => {
     (err) => next(err)
   );
 });
+
+router.post('/deleteJournalEntry', verifyUser, (req, res, next) => {
+  User.findById(req.user._id).then(
+    (user) => {
+      user.journalEntries.remove(req.body,{single:true},function(err){});;
+      user.save((err, user) => {
+        if (err) {
+          res.statusCode = 500;
+          res.send(err);
+        } else {
+          res.send(user);
+        }
+      });
+    },
+    (err) => next(err)
+  );
+});
+
 module.exports = router;

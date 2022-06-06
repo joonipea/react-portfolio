@@ -84,6 +84,14 @@ const Welcome = () => {
           <p>
             Your reward points: <strong>{userContext.details.points}</strong>
           </p>
+          <div>
+            Your journal entries: {userContext.details.journalEntries.map((entry, index) => (
+              <div key={index}>
+                <div>{entry.key}</div>
+                <div>{entry.value.entry}</div>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="user-actions">
           <Button

@@ -43,45 +43,53 @@ var sDisplay = `.Settings-Container{display: none;}`;
 
 
 class DaySection extends React.Component{
-    constructor(props) {
+    constructor(props){
         super(props);
-      }
-    state = {
-        fontSize: 16,
-        textColor: '#000000',
-        activeIndex: activeDay-1,
-        color: bodyStyle,
-        activeMonth,
-        monthName,
-        backgroundColor: bgColor,
-        alertMessage: '',
-        deleteConfirmation: 'delete entry',
-        deleteClass: '',
-        messageOpacity: '0%',
-        aboutOpen: 'about this page',
-        settingsDisplay: sDisplay,
-        sOpen: false,
-        allowColor: false,
-        pathc1: 458,
-        pathc2: 458,       
-        pathc3: 458,
-        pathc4: 458,
-        pathc5: 458,
-        pathc6: 458,
-        pathc7: 458,
-        pathc8: 458,
-        pathc9: 458,
-        pathc10: 458,
-        pathc11: 458,
-        pathc12: 458,
-        pathc13: 458,
-        pathc14: 458,
-        pathc15: 458
+        this.state = {
+            fontSize: 16,
+            textColor: '#000000',
+            activeIndex: activeDay-1,
+            color: bodyStyle,
+            activeMonth,
+            monthName,
+            backgroundColor: bgColor,
+            alertMessage: '',
+            deleteConfirmation: 'delete entry',
+            deleteClass: '',
+            messageOpacity: '0%',
+            aboutOpen: 'about this page',
+            settingsDisplay: sDisplay,
+            sOpen: false,
+            allowColor: false,
+            pathc1: 458,
+            pathc2: 458,       
+            pathc3: 458,
+            pathc4: 458,
+            pathc5: 458,
+            pathc6: 458,
+            pathc7: 458,
+            pathc8: 458,
+            pathc9: 458,
+            pathc10: 458,
+            pathc11: 458,
+            pathc12: 458,
+            pathc13: 458,
+            pathc14: 458,
+            pathc15: 458
+        }
     }
     componentDidMount(){
         journalEntry.current.innerHTML = journalPage !== undefined ? journalPage.entry : '';
     }
     render(){
+        if (this.props.userLoggedin === true){
+            const cloudLoad = () => {
+                this.props.details.journalEntries.map((item, index) => {
+                    store.set(item.key, item.value);
+                })
+            }
+            cloudLoad()
+        }
         const handleSave = () =>{
             return new Promise((resolve)=>{
                 if(freshText === 1){
@@ -97,22 +105,26 @@ class DaySection extends React.Component{
                     setTimeout(function(){
                         that.setState({messageOpacity:'0%'})
                     },1200)
-                    fetch(`${process.env.REACT_APP_API_ENDPOINT}users/saveJournalEntry`, {
-                        method: 'POST',
-                        credentials: 'include',
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${dis.props.appContext.token}`,
-                          },
-                        body: entry
-                    })
-                    .then(response => {
-                        if(!response.ok){
-                            console.log(response)
-                        } else {
-                            console.log(response)
-                        }
-                    });
+
+                    /* cloud saving */
+                    if (this.props.userLoggedin === true){
+                        fetch(`${process.env.REACT_APP_API_ENDPOINT}users/saveJournalEntry`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${dis.props.appContext.token}`,
+                            },
+                            body: entry
+                        })
+                        .then(response => {
+                            if(!response.ok){
+                                console.log(response)
+                            } else {
+                                console.log(response)
+                            }
+                        });
+                    }
                     resolve();
                 }
                 else{
@@ -123,7 +135,28 @@ class DaySection extends React.Component{
         }
         const handleDelete = () => {
             return new Promise((resolve)=>{
+                var je = journalEntry.current.innerHTML
+                var entry = JSON.stringify({key: pageTitle, value: {activeDay,activeYear,activeMonth,entry:je}})
+                const dis = this;
                 if(deleteConfirmation === 'are you sure?') {
+                    if (this.props.userLoggedin === true){
+                        fetch(`${process.env.REACT_APP_API_ENDPOINT}users/deleteJournalEntry`, {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${this.props.appContext.token}`,
+                            },
+                            body: entry
+                        })
+                        .then(response => {
+                            if(!response.ok){
+                                console.log(response)
+                            } else {
+                                console.log(response)
+                            }
+                        });
+                    }
                     store.remove(pageTitle);
                     journalEntry.current.innerHTML = '';
                     this.setState({alertMessage: 'deleted'});
@@ -138,6 +171,24 @@ class DaySection extends React.Component{
                 }
                 else{
                     const handleDeleteConfirmation = () => {
+                        if (this.props.userLoggedin === true){
+                            fetch(`${process.env.REACT_APP_API_ENDPOINT}users/saveJournalEntry`, {
+                                method: 'POST',
+                                credentials: 'include',
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${dis.props.appContext.token}`,
+                                },
+                                body: entry
+                            })
+                            .then(response => {
+                                if(!response.ok){
+                                    console.log(response)
+                                } else {
+                                    console.log(response)
+                                }
+                            });
+                        }
                         this.setState({deleteConfirmation:'are you sure?'});
                         this.setState({deleteClass:'delConf'});
                     }
@@ -506,6 +557,7 @@ class DaySection extends React.Component{
                     <div>Font Color <input onChange={textC} type={`color`}></input></div>
                     <div><button onClick={exportEntries}>Export Entries</button></div>
                     <div><button onClick={importEntries}>Import Entries</button></div>
+                    <div><a href={'/user'}><button>{this.props.userLoggedin ? 'Account' : 'Login'}</button></a></div>
                     <div><button onClick={settings}>Close Settings</button></div>
                 </div>
                 <style>{color}{settingsDisplay}{fontStyle}
