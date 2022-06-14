@@ -81,16 +81,8 @@ const Welcome = () => {
               {userContext.details.lastName &&
                 " " + userContext.details.lastName}!
           </p>
-          <p>
-            Your reward points: <strong>{userContext.details.points}</strong>
-          </p>
           <div>
-            Your journal entries: {userContext.details.journalEntries.map((entry, index) => (
-              <div key={index}>
-                <div>{entry.key}</div>
-                <div>{entry.value.entry}</div>
-              </div>
-            ))}
+            You have {userContext.details.journalEntries.length} journal entries 
           </div>
         </div>
         <div className="user-actions">

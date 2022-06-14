@@ -8,7 +8,7 @@
 }
 
 .Text-Container{
-    max-width: calc(100% - 333px);
+    max-width: calc(100% - 379px);
     width: 75%;
 }
 .Text-Container button{
@@ -20,7 +20,7 @@ button{
 
 }
 .Date-Container{
-    width:332px;
+    width:378px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,22 +33,39 @@ button{
 @media screen and (max-width: 815px) {
     .Journal-Container{
         flex-direction: column;
+        padding: 0;
     }
     .Text-Container{
         max-width: 100%;
         width: 100%;
         order: 1;
+        padding: 0 15px;
     }
     .Date-Container{
-        width: 100%;
         order: 2;
         margin-bottom: 15px;
+        margin: auto;
     }
     .btn-grp{
         display: flex;
         justify-content: center;
         margin-top: 50px;
         margin-bottom: 50px;
+    }
+    
+}
+@media screen and (max-width: 378px) {
+    .Date-Button{
+        max-width: calc((100vw / 7) * (5 / 9));
+        max-height: calc((100vw / 7) * (5 / 9));
+        margin: calc((100vw / 7) * (2 / 9));
+        line-height: calc((100vw / 7) * (5 / 9));
+    }
+    .Active-Date-Button{
+        max-width: calc((100vw / 7) * (5 / 9));
+        max-height: calc((100vw / 7) * (5 / 9));
+        margin: calc((100vw / 7) * (2 / 9));
+        line-height: calc((100vw / 7) * (5 / 9));
     }
     
 }
@@ -69,9 +86,21 @@ button{
     line-height: 30px;
     border-radius: 50%;
     display: inline-block;
-    margin: 20px;
+    margin: 12px;
     cursor: pointer;
     transition: all ease 0.4s;
+    text-align: center;
+    color: black;
+}
+.lastMonth-Button{
+    opacity: 0;
+}
+.week-names{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    padding: 12px;
 }
 .Date-Button:hover{
     filter:invert();
@@ -88,7 +117,9 @@ button{
     width: 30px;
     border-radius: 50%;
     display: inline-block;
-    margin: 20px;
+    margin: 12px;
+    text-align: center;
+    color: white;
 }
 .date-control{
     display: flex;
@@ -96,7 +127,7 @@ button{
     justify-content: center;
 }
 .date-point-container{
-    text-align: center;
+    text-align: left;
 }
 [contenteditable=true]:empty:before{
     content: attr(placeholder);

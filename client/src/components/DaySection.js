@@ -197,6 +197,10 @@ class DaySection extends React.Component{
                 }
             })
         }
+        const handleDeleteCancel = () => {
+            this.setState({deleteConfirmation:'delete entry'});
+            this.setState({deleteClass:''});
+        }
         const checkJournalUpdate = () => {
 
                 if (!journalPage) {
@@ -256,7 +260,7 @@ class DaySection extends React.Component{
             if(aboutOpen === 'about this page'){
                 await handleSave();
                 
-                journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
+                journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. Alternatively, you can log in through the settings page to enable cloud saving. Please note entries are not encrypted. Accounts are made and accessed through Passport.js, Mongodb, and Express.js The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
                 journalEntry.current.contentEditable = false;
                 this.setState({aboutOpen:'close about'});
             }else{
@@ -400,9 +404,12 @@ class DaySection extends React.Component{
         var datePoints = [];
         const setDatePoints = async (activeIndex) =>{
             colorOld();
-            for (let index = 0; index < numDays; index++) {
+            var daysFromSun = new Date(activeYear, this.state.activeMonth, 1).getDay();
+            console.log(numDays);
+            for (let index = 0 - daysFromSun; index < numDays; index++) {
                 const currentEntry = `${index+1}+${this.state.monthName}+${activeYear}`
-                const activeCheck = activeIndex === index ? 'Active-Date-Button' : 'Date-Button';
+                const lastMonthCheck = index < 0 ? 'lastMonth-Button' : '';
+                const activeCheck = activeIndex === index ? `Active-Date-Button ${lastMonthCheck}` : `Date-Button ${lastMonthCheck}`;
                 const oldCheck = entries.includes(currentEntry) ? `${activeCheck} Old-Date-Button` : activeCheck;
                 datePoints.push(
                     <div 
@@ -438,6 +445,41 @@ class DaySection extends React.Component{
             journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
             this.setState({activeIndex: activeDay - 1})     
         };
+        const currentDay = async () =>{
+            function setYear(){
+                return new Promise((resolve)=>{
+                    activeYear = year;
+                    resolve();
+                })
+            }
+            function setMonth(){
+                return new Promise((resolve)=>{
+                    activeMonth = month;
+                    
+                    resolve();
+                })
+            }
+            function setDay(){
+                return new Promise((resolve)=>{
+                    activeDay = day
+                    pageTitle = `${activeDay}+${monthName}+${activeYear}`;
+                    resolve();
+                })
+             }
+            await handleSave();
+            await setYear();
+            await setMonth();
+            await setDay();
+            monthName = ml[activeMonth];
+            datePoints = [];
+            numDays = new Date(activeYear, activeMonth+1, 0).getDate();
+            const newPage = store.get(pageTitle);
+            journalEntry.current.innerHTML = newPage !== undefined ? newPage.entry : '';
+            this.setState({ activeIndex: activeDay - 1 });
+            this.setState({activeMonth});
+            this.setState({monthName});
+            setDatePoints(this.state.activeIndex);  
+        }
         const nextMonth = async () =>{
             if (activeMonth === 11){
                 return
@@ -551,7 +593,7 @@ class DaySection extends React.Component{
             <>
                 <div className="Settings-Container">
                     <h2>Settings</h2>
-                    <div>Font Size <input type={`number`} value={fontSize} onChange={handleFont}></input></div>
+                    <div>Font Size <input type={`number`} value={fontSize} min={"0"} max={"96"} onChange={handleFont}></input></div>
                     <div>Color Mode <input onChange={colorMode} type={`checkbox`}></input></div>
                     <div>Background Color <input onChange={backgroundC} value={bgColor} type={`color`}></input></div>
                     <div>Font Color <input onChange={textC} type={`color`}></input></div>
@@ -564,10 +606,12 @@ class DaySection extends React.Component{
                 </style>
                 <div className='Text-Container'>
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
+                    <button onClick={()=>currentDay()}>Jump to Today</button>
                     <div onKeyDown={() => checkJournalUpdate()} contentEditable ref={journalEntry} className='Journal-Text' placeholder={funSaying}></div>
                     <div className="btn-grp">
                         <button onClick={handleSave}>save</button>
                         <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
+                        {deleteConfirmation === 'are you sure?' ? <button onClick={handleDeleteCancel}>cancel</button> : null}
                         <button onClick={about}>{aboutOpen}</button>
                         <button onClick={settings}>settings</button>
                     </div>
@@ -577,6 +621,15 @@ class DaySection extends React.Component{
                         <button onClick={()=>previousMonth()}>&#60;</button>
                         <h2 style={{width:`80%`,textAlign:`center`}}>{ml[activeMonth]} {activeDay}</h2>
                         <button onClick={()=>nextMonth()}>&#62;</button>
+                    </div>
+                    <div className="week-names">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
                     </div>
                     <div className="date-point-container">
                     {datePoints}
