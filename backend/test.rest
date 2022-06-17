@@ -30,18 +30,18 @@ POST http://localhost:8081/users/refreshToken
 
 GET http://localhost:8081/users/me
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzA3NTQsImV4cCI6MTY1NDUzMTY1NH0.ZbMDh_JXz-k-RO6TVcFCZ1guTEP3040yB7tmZg07IDw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzE0NjAsImV4cCI6MTY1NDUzMjM2MH0.77Lo1t1DlZQDBHSNzv4bblrs3Aa7cczG-V1mLDBCfrI
 
 ###
 
 GET http://localhost:8081/users/logout
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzA3NTQsImV4cCI6MTY1NDUzMTY1NH0.ZbMDh_JXz-k-RO6TVcFCZ1guTEP3040yB7tmZg07IDw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzE0NjAsImV4cCI6MTY1NDUzMjM2MH0.77Lo1t1DlZQDBHSNzv4bblrs3Aa7cczG-V1mLDBCfrI
 
 ###
 POST http://localhost:8081/users/saveJournalEntry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzA3NTQsImV4cCI6MTY1NDUzMTY1NH0.ZbMDh_JXz-k-RO6TVcFCZ1guTEP3040yB7tmZg07IDw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzE0NjAsImV4cCI6MTY1NDUzMjM2MH0.77Lo1t1DlZQDBHSNzv4bblrs3Aa7cczG-V1mLDBCfrI
 
 {"key":"5+June+2022","value":{"activeDay":5,"activeYear":2022,"activeMonth":5,"entry":"saving to the database god willing! !! you can go go crazy wknr"}}
 
@@ -49,9 +49,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwY
 
 POST http://localhost:8081/users/deleteJournalEntry
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzA3NTQsImV4cCI6MTY1NDUzMTY1NH0.ZbMDh_JXz-k-RO6TVcFCZ1guTEP3040yB7tmZg07IDw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzEyOTYsImV4cCI6MTY1NDUzMjE5Nn0.gsHy0fN4ppw38kLnOxJH054hUuYB2PvtsNStrOzlbQI
 
-{"key":"5+June+2022"}
+{"key":"5+June+2022","value":{"activeDay":5,"activeYear":2022,"activeMonth":5,"entry":"saving to the database god willing! !! you can go go crazy wknr"}}
 
 ###
 
