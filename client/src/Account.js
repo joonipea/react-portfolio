@@ -9,7 +9,6 @@ import Welcome from "./Welcome"
 function Account() {
   const [currentTab, setCurrentTab] = useState("login")
   const [userContext, setUserContext] = useContext(UserContext)
-  console.log(userContext.token);
 
   const verifyUser = useCallback(() => {
     fetch(process.env.REACT_APP_API_ENDPOINT + "users/refreshToken", {

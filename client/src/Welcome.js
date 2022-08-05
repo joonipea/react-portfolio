@@ -2,6 +2,7 @@ import { Button, Card } from "@blueprintjs/core"
 import React, { useCallback, useContext, useEffect } from "react"
 import { UserContext } from "./context/UserContext"
 import Loader from "./Loader"
+var store = require("store-js")
 
 const Welcome = () => {
   const [userContext, setUserContext] = useContext(UserContext)
@@ -34,7 +35,6 @@ const Welcome = () => {
         }
       }
     })
-    console.log(userContext.token)
   }, [setUserContext, userContext.token])
 
   useEffect(() => {
@@ -55,7 +55,9 @@ const Welcome = () => {
       setUserContext(oldValues => {
         return { ...oldValues, details: undefined, token: null }
       })
+      store.clearAll()
       window.localStorage.setItem("logout", Date.now())
+
     })
   }
 

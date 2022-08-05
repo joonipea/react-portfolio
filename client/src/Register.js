@@ -41,7 +41,13 @@ const Register = () => {
           } else if (response.status === 500) {
             console.log(response)
             const data = await response.json()
-            if (data.message) setError(data.message || genericErrorMessage)
+            if (data.message) {
+              if (data.message.includes("already")) {
+                setError(`${data.message}${<><br/><a href="/user/forgot">Forgot your password?</a></>}` || genericErrorMessage)
+                }else{
+                  setError(data.message || genericErrorMessage)
+                } 
+            }
           } else {
             setError(genericErrorMessage)
           }
@@ -50,7 +56,6 @@ const Register = () => {
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
-          console.log(userContext)
         }
       })
       .catch(error => {

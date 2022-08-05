@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const {
   getToken,
@@ -196,5 +197,90 @@ router.post('/deleteJournalEntry', verifyUser, (req, res, next) => {
     (err) => next(err)
   );
 });
+
+router.post('/updatePassword', (req, res, next) => { 
+  User.findByUsername(req.body.username).then(
+    (user) => {
+      user.setPassword(req.body.password, function(err){
+        if(err){
+          res.statusCode = 500;
+          res.send(err);
+        }
+        else{
+          user.save((err, user) => {
+            if (err) {
+              res.statusCode = 500;
+              res.send(err);
+            } else {
+              res.send(user);
+            }
+          });
+        }
+      });
+    }
+  );
+})
+
+router.post('/emailUser', (req, res) => {
+
+  async function mail(email, resetToken){
+      
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "a2plcpnl0929.prod.iad2.secureserver.net",
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        user: "donotreply@joonipea.com", // generated ethereal user
+        pass: process.env.EMAIL_PASS, // generated ethereal password
+      },
+      tls: {servername: "joonipea.com"},
+      sendMail: true,
+    });
+  
+    // send mail with defined transport object
+    let info = await transporter.sendMail({
+      from: 'donotreply@joonipea.com', // sender address
+      to: email, // list of receivers
+      subject: "Change your password for Joonipea.com", // Subject line
+      text: "Click here to change your password", // plain text body
+      html: `<p>Click <a href='${process.env.WHITELISTED_DOMAINS}/user/changepassword?token=${resetToken}&email=${email}'>here</a> to change your password.</p>`, // html body
+    });
+    transporter.verify(function (error, success) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Server is ready to take our messages");
+      }
+    });
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    console.log(info)
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }
+
+  User.findByUsername(req.body.email).then(
+    (user) => {
+      if (user) {
+        const token = getToken({ _id: user._id });
+        const refreshToken = getRefreshToken({ _id: user._id });
+        user.refreshToken.push({ refreshToken });
+        user.save((err, user) => {
+          if (err) {
+            res.statusCode = 500;
+            res.send(err);
+          } else {
+            mail(req.body.email, refreshToken);
+            res.send('Email sent')
+          }
+        });
+      } else {
+        res.send('User not found')
+      }
+    }
+  );
+})
 
 module.exports = router;

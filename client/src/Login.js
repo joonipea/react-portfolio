@@ -28,7 +28,7 @@ const Login = () => {
           if (response.status === 400) {
             setError("Please fill all the fields correctly!")
           } else if (response.status === 401) {
-            setError("Invalid email and password combination.")
+            setError(<><p>Invalid email and password combination.</p><a href="/user/forgot">Forget your password?</a></>)
           } else {
             setError(genericErrorMessage)
           }
@@ -37,7 +37,6 @@ const Login = () => {
           setUserContext(oldValues => {
             return { ...oldValues, token: data.token }
           })
-          console.log(userContext)
         }
       })
       .catch(error => {

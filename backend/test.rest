@@ -58,3 +58,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwY
 GET http://localhost:8081/users/delete
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjliZTgwYWJiMzcwNTFmODE1ZmRhMWEiLCJpYXQiOjE2NTQ1MzA3NTQsImV4cCI6MTY1NDUzMTY1NH0.ZbMDh_JXz-k-RO6TVcFCZ1guTEP3040yB7tmZg07IDw
+
+###
+
+POST http://localhost:8081/users/emailUser
+Content-Type: application/json
+
+{"email":"juneprattm@gmail.com"}
+
+###
+
+POST http://localhost:8081/users/updatePassword
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmFiZjM4NzhjMTMzNjllYTRjYjRkMmYiLCJpYXQiOjE2NTU4NjIwNjgsImV4cCI6MTY1ODQ1NDA2OH0.RVMijZIKTKWYmtcjgb9KmnJIMhwe9DB529Tua0n1tmE
+
+{
+    "username": "june@joonipea.com",
+    "password": "123456"
+}

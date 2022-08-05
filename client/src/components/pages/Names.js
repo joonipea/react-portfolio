@@ -6381,10 +6381,12 @@ const firstName = [
 "Lightning"
 ]
 
+const namesArray = [];
+
 class Names extends React.Component{
     state = {
-        firstN: 'Name',
-        lastN: 'Generator',
+        firstN: '',
+        lastN: '',
         percentage: '0.00003%',
         realpercentage: '0.00003%'
     };
@@ -6422,11 +6424,23 @@ class Names extends React.Component{
     render(){
         return(
             <div style={{whiteSpace: 'pre-wrap', overflowWrap: 'break-word'}} className="name-container">
-                <h1 className="section-header">{this.state.firstN} {this.state.lastN}</h1>
-                <Button variant="success" onClick={() => this.setState({firstN: this.getRandomFirstName(),lastN: this.getRandomLastName()})}>Generate a cool name!</Button>
+                <h1 className="section-header">Name Generator</h1>
+                <h2 className="section-header">{this.state.firstN} {this.state.lastN}</h2>
+                <Button variant="success" 
+                onClick={() => {
+                    this.setState({firstN: this.getRandomFirstName(),lastN: this.getRandomLastName()})
+                    var name = this.state.firstN + " " + this.state.lastN
+                    namesArray.push(name)
+                }}>Generate a cool name!</Button>
                 <p>Names sourced from:</p><a href="https://gist.github.com/BenjaminAdams/4f6175e7ede6af50e9ee">https://gist.github.com/BenjaminAdams/4f6175e7ede6af50e9ee</a><br></br><a href="https://gist.github.com/ruanbekker/a1506f06aa1df06c5a9501cb393626ea">https://gist.github.com/ruanbekker/a1506f06aa1df06c5a9501cb393626ea</a><br></br><a href="https://gist.github.com/ruanbekker/a1506f06aa1df06c5a9501cb393626ea">https://gist.github.com/subodhghulaxe/8148971</a><br></br>
                 <p className="fine-print">{this.state.percentage}% chance to get Lightning McQueen </p>
-                <p>{this.state.realpercentage}% chance to get Montgomery McQueen</p>
+                <p className="fine-print">{this.state.realpercentage}% chance to get Montgomery McQueen</p>
+                <div>
+                    <h2>Past names</h2>
+                    {namesArray.map((name, index) => {
+                        return <p key={index}>{name}</p>
+                    })}
+                </div>
             </div>
         )
     }

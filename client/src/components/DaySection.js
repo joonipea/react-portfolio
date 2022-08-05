@@ -1,4 +1,5 @@
 import React, {createRef} from "react";
+import { Button, ButtonGroup } from "@blueprintjs/core";
 var store = require('store-js');
 
 const saying = [
@@ -260,7 +261,7 @@ class DaySection extends React.Component{
             if(aboutOpen === 'about this page'){
                 await handleSave();
                 
-                journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. Alternatively, you can log in through the settings page to enable cloud saving. Please note entries are not encrypted. Accounts are made and accessed through Passport.js, Mongodb, and Express.js The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio/blob/master/src/components/DaySection.js'>here</a>.`
+                journalEntry.current.innerHTML = `Hi this is a simple react app for storing your thoughts. Entries are stored locally in your browser using <a href='https://www.npmjs.com/package/store-js'>store-js</a>. Alternatively, you can log in through the settings page to enable cloud saving. Please note entries are not encrypted. Accounts are made and accessed through Passport.js, Mongodb, and Express.js The heavylifting for this page can be found <a href='https://github.com/joonipea/react-portfolio'>here</a>.`
                 journalEntry.current.contentEditable = false;
                 this.setState({aboutOpen:'close about'});
             }else{
@@ -597,24 +598,28 @@ class DaySection extends React.Component{
                     <div>Color Mode <input onChange={colorMode} type={`checkbox`}></input></div>
                     <div>Background Color <input onChange={backgroundC} value={bgColor} type={`color`}></input></div>
                     <div>Font Color <input onChange={textC} type={`color`}></input></div>
-                    <div><button onClick={exportEntries}>Export Entries</button></div>
-                    <div><button onClick={importEntries}>Import Entries</button></div>
-                    <div><a href={'/user'}><button>{this.props.userLoggedin ? 'Account' : 'Login'}</button></a></div>
-                    <div><button onClick={settings}>Close Settings</button></div>
+                    <ButtonGroup className="settings-btn-grp" vertical>
+                        <Button icon="export" onClick={exportEntries}>Export Entries</Button>
+                        <Button icon="import" onClick={importEntries}>Import Entries</Button>
+                        <a href={'/user'}><Button icon="user">{this.props.userLoggedin ? 'Account' : 'Login'}</Button></a>
+                        <Button icon="cross" onClick={settings}>Close Settings</Button>
+                    </ButtonGroup>
                 </div>
                 <style>{color}{settingsDisplay}{fontStyle}
                 </style>
                 <div className='Text-Container'>
                     <h2>{ml[activeMonth]} {activeDay}, {activeYear}</h2>
-                    <button onClick={()=>currentDay()}>Jump to Today</button>
+                    <Button onClick={()=>currentDay()}>jump to today</Button>
+                    <Button onClick={about}>{aboutOpen}</Button>
                     <div onKeyDown={() => checkJournalUpdate()} contentEditable ref={journalEntry} className='Journal-Text' placeholder={funSaying}></div>
-                    <div className="btn-grp">
-                        <button onClick={handleSave}>save</button>
-                        <button className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</button>
-                        {deleteConfirmation === 'are you sure?' ? <button onClick={handleDeleteCancel}>cancel</button> : null}
-                        <button onClick={about}>{aboutOpen}</button>
-                        <button onClick={settings}>settings</button>
-                    </div>
+                    <ButtonGroup alignText="center" className="btn-grp">
+                        <Button icon="floppy-disk" intent="primary" onClick={handleSave}>save</Button>
+                        <Button icon="settings" onClick={settings}>settings</Button>
+                        <ButtonGroup alignText="center" vertical>
+                            <Button intent="danger" icon="trash" className={deleteClass} onClick={handleDelete}>{deleteConfirmation}</Button>
+                            {deleteConfirmation === 'are you sure?' ? <Button minimal small onClick={handleDeleteCancel}>cancel</Button> : null}
+                        </ButtonGroup>
+                    </ButtonGroup>
                 </div>
                 <div className='Date-Container'>
                     <div className="date-control">

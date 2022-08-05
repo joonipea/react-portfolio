@@ -25,7 +25,7 @@ var sess = {
   saveUninitialized: true,
   cookie: {}
 }
-sess.cookie.sameSite = "Lax";
+sess.cookie.sameSite = "None";
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
   sess.cookie.secure = true // serve secure cookies

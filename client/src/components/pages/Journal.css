@@ -78,6 +78,8 @@ button{
     overflow: auto;
     height: calc(100% - 96px);
     resize: none;
+    min-height: 50vh;
+    margin-top: 30px;
 }
 .Date-Button{
     background-color:bisque;
@@ -155,4 +157,19 @@ button{
     left: 0;
     padding: 50px;
     z-index: 2;
+}
+
+.btn-grp > * {
+    margin: 0 10px !important;
+}
+.bp4-button-text{
+    text-align: center;
+}
+.btn-grp {
+    max-height: 30px;
+}
+
+.settings-btn-grp > *{
+    margin: 10px 0 !important;
+
 }

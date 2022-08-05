@@ -5,6 +5,9 @@
 .media-controls button{
     font-family: 'unifont';
 }
+.file button{
+    font-family: 'unifont';
+}
 .media-controls button{
     width:32px;
 }
@@ -22,6 +25,7 @@
     text-align: center;
     background: white;
     padding-top: 15px;
+    height: 145px;
 }
 .player input{
     width: 60%;
@@ -77,14 +81,17 @@
 }
 .beatstore-container{
     height: calc(100vh - 145px);
-    padding-bottom: 40px;
     position: absolute;
     top: 0;
     background-color: beige;
     min-width: 100%;
 }
 .file{
-    margin-bottom: 5px;
+    margin-bottom: 15px;
+    height: 45px;
+    align-items: center;
+    display: flex;
+    font-size: 30px;
 }
 .file > span{
     margin-left: 5px;

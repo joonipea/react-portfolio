@@ -23,7 +23,7 @@ function Beatstore() {
     const [playPause, setSymbol] = useState('\u25BA');
     const [looping, setLoop] = useState('\ue908');
     const currentMinutes = Math.trunc(currentTime/60);
-    const currentSeconds = Math.round(currentTime) - (currentMinutes * 60);
+    const currentSeconds = Math.floor(currentTime) - (currentMinutes * 60);
 
     
     const play = () => {
@@ -152,6 +152,25 @@ function Beatstore() {
       }
     }
     const handleChange = (key) => {
+      if(pFiles[key].file === currentSong && audioPlayer.current.playing == 0){
+        audioPlayer.current.play();
+        setSymbol(
+          audioPlayer.current.playPause = '\u23f8'
+        );
+        setPlaying(
+          audioPlayer.current.playing = 1
+        );
+      }else if(pFiles[key].file === currentSong && audioPlayer.current.playing == 1){
+        audioPlayer.current.pause();
+        setSymbol(
+          audioPlayer.current.playPause = '\u25BA'
+        );
+        setPlaying(
+          audioPlayer.current.playing = 0
+        );
+      }
+      
+      else{
       function setSong() {
         return new Promise((resolve)=>{
           audioPlayer.current.pause();
@@ -181,6 +200,7 @@ function Beatstore() {
         audioPlayer.current.playPause = '\u23F8'
       );
       playNewSong();
+      }
       
     }
     const onPlaying = () => {
@@ -200,7 +220,7 @@ function Beatstore() {
         <div className="pList">
           {files.map((file, index) => (
             <div onClick={() => handleChange(index)} className="file" key={index}>
-              <button>&#9658;</button><span>{pFiles[index].name}</span>
+              <button>{pFiles[index].file == currentSong ? playPause : '\u25BA'}</button><span>{pFiles[index].name}</span>
             </div>
           ))}
         </div>
