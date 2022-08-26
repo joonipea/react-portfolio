@@ -7,7 +7,11 @@
 }
 .cover-art{
     margin-bottom: 15px;
+    transition: transform 0.2s ease;
 }
 .section-header{
     margin-bottom: 15px;
+}
+.cover-art:hover{
+    transform: scale(1.1)
 }

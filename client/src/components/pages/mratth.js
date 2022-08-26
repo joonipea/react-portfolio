@@ -321,7 +321,7 @@ const Mathle = () => {
             var boxes = [];
             const editable = active == 'yes' ? 'true' : 'false';
             for(i = 0; i < activeProblem.length; i++) {
-                boxes.push(<div key={i} data-key={i} onClick={()=>setActiveBox(i)} onKeyPress={onKeyDwn} onKeyUp={onKeyUp} className='guessBox' contentEditable={editable}></div>);
+                boxes.push(<div key={i} data-key={i} onClick={()=>setActiveBox(i)} onKeyPress={onKeyDwn} onKeyUp={onKeyUp} className='guessBox' inputmode='numeric' contentEditable={editable}></div>);
             }
             return boxes;
         }
