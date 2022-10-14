@@ -83,8 +83,8 @@
   }
 }
 *{
-  font-family: arbotek,sans-serif;
-font-weight: 300;
+  font-family: Verdana, sans-serif;
+font-weight: 100;
 font-style: normal;
 }
 @import "~normalize.css";
@@ -113,4 +113,7 @@ font-style: normal;
   margin: auto;
   background-color: transparent;
   box-shadow: none;
+}
+body{
+  background-color: white;
 }

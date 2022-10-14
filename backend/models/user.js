@@ -34,6 +34,10 @@ const User = new Schema({
   refreshToken: {
     type: [Session],
   },
+  adminStatus: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 //Remove refreshToken from the response
@@ -46,4 +50,5 @@ User.set("toJSON", {
 
 User.plugin(passportLocalMongoose)
 
-module.exports = mongoose.model("User", User)
+const myDB = mongoose.connection.useDb("test")
+module.exports = myDB.model("User", User)

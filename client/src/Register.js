@@ -15,7 +15,7 @@ const Register = () => {
   store.each(function(value, key){
     entryList.push({key,value})
   })
-  console.log(entryList);
+
 
   const formSubmitHandler = async (e) => {
     e.preventDefault()

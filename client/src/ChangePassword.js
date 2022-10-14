@@ -9,8 +9,7 @@ const ChangePassword = () => {
     var token = document.location.href.split('token=')[1];
     var username = document.location.href.split('email=')[1];
 
-    console.log(token)
-    console.log(username)
+
     const formSubmitHandler = e => {
         e.preventDefault()
         setIsSubmitting(true)

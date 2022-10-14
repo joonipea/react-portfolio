@@ -1,11 +1,9 @@
-import React, {useContext, useEffect, useCallback} from 'react';
-import DaySection from '../DaySection';
-import './Journal.css'
-import { UserContext } from "../../context/UserContext"
-import Loader from '../../Loader';
+import React, {useContext, useEffect, useCallback} from "react";
+import { UserContext } from "../../context/UserContext";
+import Loader from "../../Loader";
+import WritePosts from "../WritePosts";
 
-
-function Journal(){
+function BlogAdmin(){
     const [userContext, setUserContext] = useContext(UserContext)
 
     const verifyUser = useCallback(() => {
@@ -17,11 +15,11 @@ function Journal(){
           if (response.ok) {
             const data = await response.json()
             setUserContext(oldValues => {
-              return { ...oldValues, token: data.token }
+              return { ...oldValues, token: data.token, adminStatus: data.adminStatus }
             })
           } else {
             setUserContext(oldValues => {
-              return { ...oldValues, token: null }
+              return { ...oldValues, token: null, adminStatus: false }
             })
           }
           // call refreshToken every 5 minutes to renew the authentication token.
@@ -46,7 +44,7 @@ function Journal(){
           if (response.ok) {
             const data = await response.json()
             setUserContext(oldValues => {
-              return { ...oldValues, details: data }
+              return { ...oldValues, details: data, adminStatus: data.adminStatus }
             })
           } else {
             if (response.status === 401) {
@@ -56,7 +54,7 @@ function Journal(){
               window.location.reload()
             } else {
               setUserContext(oldValues => {
-                return { ...oldValues, details: null }
+                return { ...oldValues, details: null, adminStatus: false }
               })
             }
           }
@@ -72,17 +70,20 @@ function Journal(){
             }
         }
       }, [userContext.details, fetchUserDetails])
-    return userContext.token === null ? (
-        <div className='Journal-Container'>
-            <DaySection userLoggedin={false} appContext={userContext} details={userContext.details}/>
+     
+      return userContext.adminStatus === true ? (
+        <div>
+          <h1>Admin Page</h1>
+          <WritePosts />
         </div>
-    ) : !userContext.details ? (
-    <Loader />
-    ) : (
-        <div className='Journal-Container'>
-            <DaySection userLoggedin={true} appContext={userContext} details={userContext.details}/>
-        </div>
-    );
+      ): !userContext.adminStatus ? (
+        <Loader />
+      ) : (
+        <div>
+          <h1>Not Admin</h1>
+          </div>
+      );
+
 }
 
-export default Journal;
+export default BlogAdmin

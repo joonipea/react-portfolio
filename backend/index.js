@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 const session = require("express-session");
+const multer = require("multer");
 
 if (process.env.NODE_ENV !== "production") {
   // Load environment variables from .env file in non prod environments
@@ -16,6 +17,8 @@ require("./strategies/LocalStrategy");
 require("./authenticate");
 
 const userRouter = require("./routes/userRoutes");
+const blogRouter = require("./routes/blogRoutes");
+const musicRouter = require("./routes/musicRoutes");
 
 const app = express();
 
@@ -34,6 +37,11 @@ if (app.get('env') === 'production') {
 app.use(session(sess));
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  parameterLimit: 100000,
+  limit: '50mb',
+  extended: true
+}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 //Add the client URL to the CORS policy
 
@@ -58,10 +66,41 @@ app.use(cors(corsOptions));
 app.use(passport.initialize());
 
 app.use("/users", userRouter);
+app.use("/blogs", blogRouter);
+app.use("/music", musicRouter);
+app.use(express.static('public'));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public");
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()} - ${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage: storage  }).single("file");
+
+app.post("/upload", (req, res, next) => {
+  upload(req, res, (err) => {
+    if (err) {
+      return res.status(400).json({ success: false, err });
+    }
+    return res.status(200).json({
+      success: true,
+      filePath: res.req.file.path,
+      fileName: res.req.file.filename,
+    });
+  });
+});
+
 
 app.get("/", function (req, res) {
   res.send({ status: "success" });
 });
+
+
+
 
 //Start the server in port 8081
 

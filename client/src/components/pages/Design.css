@@ -1,11 +1,9 @@
 .design-container{
-    position:absolute;
     top:0;
     min-height: 100vh;
     height: fit-content;
     width: 100%;
     padding: 56px 50px 50px 50px;
-    background-color: #ffe5c3;
     z-index: -1;
     overflow-x: hidden;
     margin-right: calc(-1 * (100vw - 100%));
@@ -30,7 +28,6 @@
 }
 .design-image{
     width: calc(75% - 20px);
-    padding: 0 15px;
 }
 .design-text{
     width: calc(25% - 20px);
@@ -55,9 +52,20 @@
     text-align: left;
 }
 
+.design-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    row-gap: 20px;
+    column-gap: 20px;
+}
 .website-image {
     width: 100%;
     min-width: 50%;
     margin:auto;
-    transition: ease-in-out 400ms;
+
 }

@@ -97,7 +97,6 @@ class DaySection extends React.Component{
                     var je = journalEntry.current.innerHTML
                     store.set(pageTitle, {activeDay,activeYear,activeMonth,entry:je});
                     var entry = JSON.stringify({key: pageTitle, value: {activeDay,activeYear,activeMonth,entry:je}})
-                    console.log(entry);
                     freshText = 0
                     const that = this
                     this.setState({alertMessage: 'saved'});
@@ -293,8 +292,6 @@ class DaySection extends React.Component{
                     resolve();
                 })
             }
-            console.log(store.get(pageTitle))
-            console.log(entryList)
             async function download(filename, data) {
                 await getEntries();
                 var element = document.createElement('a');
@@ -371,7 +368,6 @@ class DaySection extends React.Component{
         const textC = async (event) =>{
             this.setState({textColor: event.target.value})
             fontStyle = `.Journal-Text{font-size: ${this.state.fontSize}px;} body{color: ${this.state.textColor}}`
-            console.log(fontStyle)
         }
         const backgroundC = async (event) =>{
             bgColor = event.target.value
@@ -395,7 +391,6 @@ class DaySection extends React.Component{
                 store.each(function(value, key) {
                     if(value.activeMonth === that.state.activeMonth){
                         entries.push(key);
-                        console.log(entries);
                     }
                 })
                 resolve();
@@ -406,7 +401,6 @@ class DaySection extends React.Component{
         const setDatePoints = async (activeIndex) =>{
             colorOld();
             var daysFromSun = new Date(activeYear, this.state.activeMonth, 1).getDay();
-            console.log(numDays);
             for (let index = 0 - daysFromSun; index < numDays; index++) {
                 const currentEntry = `${index+1}+${this.state.monthName}+${activeYear}`
                 const lastMonthCheck = index < 0 ? 'lastMonth-Button' : '';

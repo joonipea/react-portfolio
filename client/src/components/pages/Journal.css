@@ -23,7 +23,7 @@ button{
     width:378px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     vertical-align: middle;
 }
 .date-control button{

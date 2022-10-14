@@ -1,0 +1,36 @@
+.dynamic-background{
+    position: fixed;
+    top: -50vh;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    min-height: 200vh;
+    justify-content: center;
+    z-index: -1;
+    filter: blur(0px);
+    display: flex;
+    align-items: stretch;
+}
+.dynamic-panel{
+    position: relative;
+    display: flex;
+    padding: 80px;
+    justify-content: center;
+    flex: 1;
+    background: radial-gradient(circle farthest-side at 0% 0%, rgb(228, 226, 208), transparent), radial-gradient(circle farthest-corner at 50% 0%, #9c78ff, transparent 58%), radial-gradient(circle farthest-side at 100% 0%, #b6fff3, transparent);
+    border-radius: 100vw;
+    transform-origin: center;
+
+}
+
+.dynamic-background > .blur {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(100px);
+    z-index: 1;
+}
